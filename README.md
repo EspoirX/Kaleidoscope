@@ -22,10 +22,10 @@ Kaleidoscope.from(this).jumpToCamera { path ->
 
 ### Demo 部份 UI:
 
-<img id='picture' src='arts/1.jpg' width='30%'>
-<img id='picture' src='arts/2.jpg' width='30%'>
-<img id='picture' src='arts/3.jpg' width='30%'>
-<img id='picture' src='arts/4.jpg' width='30%'>
-<img id='picture' src='arts/5.jpg' width='30%'>
+<a href="#"><img id='picture' src='arts/1.jpg' width='30%'></a>
+<a href="#"><img id='picture' src='arts/2.jpg' width='30%'></a>
+<a href="#"><img id='picture' src='arts/3.jpg' width='30%'></a>
+<a href="#"><img id='picture' src='arts/4.jpg' width='30%'></a>
+<a href="#"><img id='picture' src='arts/5.jpg' width='30%'></a>
 
 代码参考 https://github.com/LuckSiege/PictureSelector，并已踩坑。
