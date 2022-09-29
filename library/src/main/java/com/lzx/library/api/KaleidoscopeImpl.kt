@@ -84,6 +84,10 @@ class KaleidoscopeImpl {
         KaleConfig.savePicFolderName = name
     }
 
+    fun isFolderView(isFolder: Boolean) = apply {
+        KaleConfig.isPicFolderView = isFolder
+    }
+
     fun jumpForIntent(callback: (result: Intent?) -> Unit) {
         val act = kaleidoscope?.getActivity() ?: kaleidoscope?.getFragment()?.activity
         act?.let {

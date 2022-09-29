@@ -20,6 +20,12 @@
             android:name=".selector.PictureSelectorActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".selector.PictureFolderDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".selector.PictureFolderDetailPreviewActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".crop.CropActivity"
             android:screenOrientation="portrait" />
 

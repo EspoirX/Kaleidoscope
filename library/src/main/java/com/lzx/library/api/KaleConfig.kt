@@ -23,6 +23,8 @@ object KaleConfig {
 
     var isFilterSizeDuration = false
 
+    var isPicFolderView = false
+
     var savePicFolderName = "kaleidoscope"
 
     fun reset() {
@@ -35,6 +37,7 @@ object KaleConfig {
         isDisplayCamera = true
         isNeedCut = false
         isNeedPreview = true
+        isPicFolderView = false
 
         filterVideoMaxSecond = 0
         filterVideoMinSecond = 0

@@ -9,21 +9,46 @@
         android:id="@+id/xaingce"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="相册" />
+        android:layout_marginLeft="10dp"
+        android:text="相册多选" />
+
+    <Button
+        android:id="@+id/xaingce2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/xaingce"
+        android:text="相册单选" />
+
+    <Button
+        android:id="@+id/xaingce3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/xaingce2"
+        android:text="相册单选带裁剪" />
 
     <Button
         android:id="@+id/paizhao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/xaingce"
+        android:layout_below="@+id/xaingce"
+        android:layout_marginLeft="10dp"
         android:text="拍照" />
 
-
-    <ImageView
-        android:id="@+id/result"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <Button
+        android:id="@+id/paizhao2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:layout_below="@+id/xaingce"
+        android:layout_toRightOf="@+id/paizhao"
+        android:text="拍照带裁剪" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/paizhao2"
         android:layout_margin="20dp" />
 </RelativeLayout>

@@ -94,10 +94,6 @@ class LocalMediaLoader {
         val url = if (SdkVersionUtils.isQ()) MediaUtils.getRealPathUri(id, mimeType) else absolutePath
         mimeType = if (mimeType.isNullOrEmpty()) "image/jpeg" else mimeType
 
-        //        if (!mimeType.startsWith("image/")) {
-        //            return null
-        //        }
-
         if (mimeType.endsWith("image/*")) {
             mimeType = MediaUtils.getMimeTypeFromMediaUrl(absolutePath)
             if (!KaleConfig.isLoadGif) {

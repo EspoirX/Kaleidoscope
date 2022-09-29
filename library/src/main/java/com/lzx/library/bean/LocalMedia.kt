@@ -13,10 +13,22 @@ import kotlinx.parcelize.Parcelize
 import java.io.File
 
 @Parcelize
-class LocalMedia : Parcelable {
+class LocalMedia(var id: Long = 0,
+                 var path: String? = null,       //原始路径，可能是uri
+                 var realPath: String? = null,   //真正的路径，即绝对路径
+                 var isChecked: Boolean = false, //是否选中
+                 var position: Int = 0,          //序号
+                 var checkedCount: Int = 0,      //选中序号
+                 var mimeType: String? = null,   //媒体资源类型
+                 var width: Int = 0,             //图片宽度
+                 var height: Int = 0,            //图片高度
+                 var size: Long = 0,             //文件大小
+                 var fileName: String? = null,   //文件名
+                 var parentFolderName: String? = null, //父文件夹名称
+                 var dateAddedTime: Long = 0,    //媒体创建时间
+                 var isDisplayCamera: Boolean = false) : Parcelable {
 
     companion object {
-
 
         /**
          * 构造本地资源下的LocalMedia
@@ -56,27 +68,6 @@ class LocalMedia : Parcelable {
             return LocalMedia()
         }
     }
-
-    var id: Long = 0
-    var path: String? = null //原始路径，可能是uri
-    var realPath: String? = null  //真正的路径，即绝对路径
-    var isChecked = false
-    private var isCut = false //是否裁剪
-    var position = 0  //序号
-    var checkedCount = 0 //选中序号
-    var mimeType: String? = null //媒体资源类型
-    private var compressed = false //是否压缩
-
-    var width = 0 //图片宽度
-    var height = 0 //图片高度
-
-    var size: Long = 0 //文件大小
-    private var isOriginal = false //是否显示原图
-    var fileName: String? = null //文件名
-    var parentFolderName: String? = null //父文件夹名称
-    var dateAddedTime: Long = 0 //媒体创建时间
-
-    var isDisplayCamera = false //是否展示相机
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
