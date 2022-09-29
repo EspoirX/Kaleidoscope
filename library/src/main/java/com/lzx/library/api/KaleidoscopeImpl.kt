@@ -22,48 +22,78 @@ class KaleidoscopeImpl {
     }
 
     /**
-     *
+     * 可选中展示图片，视频等
      */
     fun chooseMode(mode: ChooseMode) = apply {
         KaleConfig.chooseMode = mode
     }
 
+    /**
+     * 最大可以选中多少张
+     */
     fun maxSelectNum(maxNum: Int) = apply {
         KaleConfig.maxSelectNum = maxNum
     }
 
+    /**
+     * 过滤最大文件大小
+     */
     fun filterMaxFileSize(size: Long) = apply {
         KaleConfig.filterMaxFileSize = size
     }
 
+    /**
+     * 过滤最小文件大小
+     */
     fun filterMinFileSize(size: Long) = apply {
         KaleConfig.filterMinFileSize = size
     }
 
+    /**
+     * 是否加载gif图
+     */
     fun isLoadGif(gif: Boolean) = apply {
         KaleConfig.isLoadGif = gif
     }
 
+    /**
+     * 是否只加载gif图
+     */
     fun isOnlyLoadGif(gif: Boolean) = apply {
         KaleConfig.isOnlyLoadGif = gif
     }
 
+    /**
+     * 是否加载视频
+     */
     fun isLoadVideo(load: Boolean) = apply {
         KaleConfig.isLoadVideo = load
     }
 
+    /**
+     * 是否加载音频
+     */
     fun isLoadAudio(load: Boolean) = apply {
         KaleConfig.isLoadAudio = load
     }
 
+    /**
+     * 是否展示拍照按钮
+     */
     fun isDisplayCamera(display: Boolean) = apply {
         KaleConfig.isDisplayCamera = display
     }
 
+    /**
+     * 是否需要裁剪
+     */
     fun isNeedCut(need: Boolean) = apply {
         KaleConfig.isNeedCut = need
     }
 
+    /**
+     * 是否需要预览
+     */
     fun isNeedPreview(need: Boolean) = apply {
         KaleConfig.isNeedPreview = need
     }
@@ -80,14 +110,24 @@ class KaleidoscopeImpl {
         KaleConfig.isFilterSizeDuration = isFilter
     }
 
+    /**
+     * 保存图片（拍照后）的文件夹名字
+     */
     fun savePicFolderName(name: String) = apply {
         KaleConfig.savePicFolderName = name
     }
 
+    /**
+     * 是否展示单选界面
+     */
     fun isFolderView(isFolder: Boolean) = apply {
         KaleConfig.isPicFolderView = isFolder
     }
 
+    /**
+     * 开始转跳相册，返回 Intent
+     *
+     */
     fun jumpForIntent(callback: (result: Intent?) -> Unit) {
         val act = kaleidoscope?.getActivity() ?: kaleidoscope?.getFragment()?.activity
         act?.let {
@@ -98,6 +138,9 @@ class KaleidoscopeImpl {
         }
     }
 
+    /**
+     * 开始转跳相册，返回 图片绝对路径
+     */
     fun jump(callback: ((path: String?) -> Unit)) {
         jumpForIntent() { result ->
             val path = result?.getStringExtra(PictureCode.EXTRA_OUTPUT_PATH)
@@ -105,6 +148,9 @@ class KaleidoscopeImpl {
         }
     }
 
+    /**
+     * 开始转跳相机，返回 图片绝对路径
+     */
     fun jumpToCamera(callback: ((path: String?) -> Unit)) {
         val act = kaleidoscope?.getActivity() ?: kaleidoscope?.getFragment()?.activity
         act?.let {
@@ -117,6 +163,9 @@ class KaleidoscopeImpl {
         }
     }
 
+    /**
+     * 开始转跳相册，需要在 onActivityResult 中获取值
+     */
     fun jumpForResult(requestCode: Int) {
         val act = kaleidoscope?.getActivity() ?: kaleidoscope?.getFragment()?.activity
         act?.let {
@@ -131,6 +180,9 @@ class KaleidoscopeImpl {
         }
     }
 
+    /**
+     * 开始转跳裁剪界面，需要在 onActivityResult 中获取值
+     */
     fun jumpCropForResult(requestCode: Int, inputPath: String) {
         val act = kaleidoscope?.getActivity() ?: kaleidoscope?.getFragment()?.activity
         act?.let {
