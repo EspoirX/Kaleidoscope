@@ -14,7 +14,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -35,12 +34,19 @@ object DisplayUtil {
     fun getPhoneWidth(): Int {
         return Resources.getSystem().displayMetrics.widthPixels
     }
+
+    @JvmStatic
+    fun getPhoneHeight(): Int {
+        return Resources.getSystem().displayMetrics.heightPixels
+    }
 }
 
 val Int.dp2px: Int
-    get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
         this.toFloat(),
-        Resources.getSystem().displayMetrics).toInt()
+        Resources.getSystem().displayMetrics
+    ).toInt()
 
 fun Int?.orDef(default: Int = 0) = this ?: default
 
@@ -54,10 +60,12 @@ fun RecyclerView.setup(block: BindingAdapter.(RecyclerView) -> Unit): BindingAda
     return adapter
 }
 
-fun RecyclerView.linear(@RecyclerView.Orientation orientation: Int = RecyclerView.VERTICAL,
-                        reverseLayout: Boolean = false,
-                        stackFromEnd: Boolean = false,
-                        recycleChildrenOnDetach: Boolean = false): RecyclerView {
+fun RecyclerView.linear(
+    @RecyclerView.Orientation orientation: Int = RecyclerView.VERTICAL,
+    reverseLayout: Boolean = false,
+    stackFromEnd: Boolean = false,
+    recycleChildrenOnDetach: Boolean = false
+): RecyclerView {
     layoutManager = LinearLayoutManager(context, orientation, reverseLayout).apply {
         this.stackFromEnd = stackFromEnd
         this.recycleChildrenOnDetach = recycleChildrenOnDetach
@@ -65,10 +73,12 @@ fun RecyclerView.linear(@RecyclerView.Orientation orientation: Int = RecyclerVie
     return this
 }
 
-fun RecyclerView.grid(spanCount: Int = 1,
-                      @RecyclerView.Orientation orientation: Int = RecyclerView.VERTICAL,
-                      reverseLayout: Boolean = false,
-                      spanSizeLookup: GridLayoutManager.SpanSizeLookup? = null): RecyclerView {
+fun RecyclerView.grid(
+    spanCount: Int = 1,
+    @RecyclerView.Orientation orientation: Int = RecyclerView.VERTICAL,
+    reverseLayout: Boolean = false,
+    spanSizeLookup: GridLayoutManager.SpanSizeLookup? = null
+): RecyclerView {
     layoutManager = GridLayoutManager(context, spanCount, orientation, reverseLayout).apply {
         if (spanSizeLookup != null) {
             setSpanSizeLookup(spanSizeLookup)
@@ -183,31 +193,41 @@ fun Activity.showToast(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
 
-inline fun <reified T : Activity> Activity.navigationToForResult(requestCode: Int,
-                                                                 vararg params: Pair<String, Any?>) =
+inline fun <reified T : Activity> Activity.navigationToForResult(
+    requestCode: Int,
+    vararg params: Pair<String, Any?>
+) =
     internalStartActivityForResult(this, T::class.java, requestCode, params)
 
-inline fun <reified T : Activity> Fragment.navigationToForResult(requestCode: Int,
-                                                                 vararg params: Pair<String, Any?>) =
+inline fun <reified T : Activity> Fragment.navigationToForResult(
+    requestCode: Int,
+    vararg params: Pair<String, Any?>
+) =
     internalStartActivityForResultFragment(this, T::class.java, requestCode, params)
 
-fun internalStartActivityForResult(act: Activity,
-                                   activity: Class<out Activity>,
-                                   requestCode: Int,
-                                   params: Array<out Pair<String, Any?>>) {
+fun internalStartActivityForResult(
+    act: Activity,
+    activity: Class<out Activity>,
+    requestCode: Int,
+    params: Array<out Pair<String, Any?>>
+) {
     act.startActivityForResult(createIntent(act, activity, params), requestCode)
 }
 
-fun internalStartActivityForResultFragment(frag: Fragment,
-                                           activity: Class<out Activity>,
-                                           requestCode: Int,
-                                           params: Array<out Pair<String, Any?>>) {
+fun internalStartActivityForResultFragment(
+    frag: Fragment,
+    activity: Class<out Activity>,
+    requestCode: Int,
+    params: Array<out Pair<String, Any?>>
+) {
     frag.startActivityForResult(createIntent(frag.context, activity, params), requestCode)
 }
 
-fun <T> createIntent(ctx: Context? = null,
-                     clazz: Class<out T>? = null,
-                     params: Array<out Pair<String, Any?>>): Intent {
+fun <T> createIntent(
+    ctx: Context? = null,
+    clazz: Class<out T>? = null,
+    params: Array<out Pair<String, Any?>>
+): Intent {
     val intent = if (clazz == null) Intent() else Intent(ctx, clazz)
     if (params.isNotEmpty()) fillIntentArguments(intent, params)
     return intent

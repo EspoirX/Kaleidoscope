@@ -9,14 +9,22 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.util.Log
 import androidx.annotation.IntRange
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.lzx.library.crop.FastBitmapDrawable
+import com.lzx.library.crop.utils.BitmapUtils
 import com.lzx.library.crop.utils.RectUtils
 import com.lzx.library.utils.BitmapLoadUtils.calculateMaxBitmapSize
+import com.lzx.library.utils.BitmapLoadUtils.readPictureDegree
+import com.lzx.library.utils.BitmapLoadUtils.rotatingImage
+import com.lzx.library.utils.DisplayUtil
 import com.lzx.library.utils.FileUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -100,16 +108,44 @@ open class TransformImageView @JvmOverloads constructor(
      * 加载图片
      */
     fun setImageUri(imageUri: Uri, outputUri: Uri?) {
-        Glide.with(context).asBitmap().load(imageUri).into(object : CustomTarget<Bitmap>() {
-            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                val copyBitmap = resource.copy(resource.config, true)
-                setBitmapLoadedResult(copyBitmap, imageUri, outputUri)
+        if (context is AppCompatActivity) {
+            (context as AppCompatActivity).lifecycleScope.launch(Dispatchers.IO) {
+                runCatching {
+                    val phoneWidth: Int = DisplayUtil.getPhoneWidth()
+                    val phoneHeight: Int = DisplayUtil.getPhoneHeight()
+                    val maxWith = phoneWidth * 3 / 4
+                    val maxHeight = phoneHeight * 3 / 4
+                    val outputPath = FileUtils.getPath(context, imageUri)
+                    val bm = BitmapUtils.bitmapFromPath(outputPath, maxWith, maxHeight)
+                    if (bm == null) {
+                        mTransformImageListener?.onLoadFailure(IllegalStateException("图片加载失败"))
+                        return@runCatching
+                    }
+                    val degree = readPictureDegree(context, outputPath)
+                    var bitmap = bm
+                    if (degree != 0) {
+                        bitmap = rotatingImage(bitmap, degree)
+                    }
+                    bitmap = bitmap?.copy(bitmap.config, true)
+                    if (bitmap == null) {
+                        mTransformImageListener?.onLoadFailure(IllegalStateException("图片加载失败"))
+                        return@runCatching
+                    }
+                    setBitmapLoadedResult(bitmap, imageUri, outputUri)
+                }
             }
+        } else {
+            Glide.with(context).asBitmap().load(imageUri).into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    val copyBitmap = resource.copy(resource.config, true)
+                    setBitmapLoadedResult(copyBitmap, imageUri, outputUri)
+                }
 
-            override fun onLoadCleared(placeholder: Drawable?) {
-                mTransformImageListener?.onLoadFailure(IllegalStateException("图片加载失败"))
-            }
-        })
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    mTransformImageListener?.onLoadFailure(IllegalStateException("图片加载失败"))
+                }
+            })
+        }
     }
 
     /**
