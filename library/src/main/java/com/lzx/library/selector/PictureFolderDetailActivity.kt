@@ -71,19 +71,25 @@ class PictureFolderDetailActivity : AppCompatActivity() {
                 }
                 R.id.image.onClick {
                     val media = getModel<LocalMedia>()
-                    val currentEditPath = media.realPath
+                    val currentEditPath = media.realPath ?: return@onClick
                     val inputUri = if (FileUtils.isContent(currentEditPath)) {
                         Uri.parse(currentEditPath)
                     } else Uri.fromFile(File(currentEditPath))
                     if (KaleConfig.isNeedCut) {
-                        navigationToForResult<CropActivity>(CropCode.CROP_REQUEST_CODE,
-                            CropCode.EXTRA_INPUT_URI to inputUri)
+                        navigationToForResult<CropActivity>(
+                            CropCode.CROP_REQUEST_CODE,
+                            CropCode.EXTRA_INPUT_URI to inputUri
+                        )
                     } else {
                         if (KaleConfig.isNeedPreview) {
-                            navigationToForResult<PictureFolderDetailPreviewActivity>(
-                                PictureFolderDetailPreviewActivity.REQUEST_CODE,
-                                "list" to list[0].data,
-                                "position" to modelPosition)
+                            val intent = Intent(
+                                context,
+                                PictureFolderDetailPreviewActivity::class.java
+                            )
+                            val bundle = Bundle()
+                            bundle.putBinder("previewData", PreviewListDataStub(list[0].data, modelPosition))
+                            intent.putExtras(bundle)
+                            startActivityForResult(intent, PictureFolderDetailPreviewActivity.REQUEST_CODE)
                         } else {
                             setResult(RESULT_OK, Intent().apply {
                                 putExtra(PictureCode.EXTRA_OUTPUT_URI, inputUri.toString())
@@ -94,6 +100,19 @@ class PictureFolderDetailActivity : AppCompatActivity() {
                     }
                 }
             }?.models = list[0].data
+        }
+    }
+
+    private class PreviewListDataStub(
+        private val data: MutableList<LocalMedia>,
+        private val modelPosition: Int
+    ) : IPreviewListData.Stub() {
+        override fun getPreviewList(): MutableList<LocalMedia> {
+            return data
+        }
+
+        override fun getPosition(): Int {
+            return modelPosition
         }
     }
 
@@ -121,8 +140,10 @@ class PictureFolderDetailActivity : AppCompatActivity() {
             } else if (requestCode == PictureFolderDetailPreviewActivity.REQUEST_CODE && data != null) {
                 setResult(RESULT_OK, Intent().apply {
                     putExtra(PictureCode.EXTRA_OUTPUT_URI, data.getStringExtra(PictureCode.EXTRA_OUTPUT_URI))
-                    putExtra(PictureCode.EXTRA_OUTPUT_PATH,
-                        data.getStringExtra(PictureCode.EXTRA_OUTPUT_PATH))
+                    putExtra(
+                        PictureCode.EXTRA_OUTPUT_PATH,
+                        data.getStringExtra(PictureCode.EXTRA_OUTPUT_PATH)
+                    )
                 })
                 finish()
             }

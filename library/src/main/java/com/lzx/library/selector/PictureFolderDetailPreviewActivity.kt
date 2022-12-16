@@ -39,8 +39,9 @@ class PictureFolderDetailPreviewActivity : AppCompatActivity() {
 
         btnBack?.setOnClickListener { finish() }
         intent?.let { it ->
-            list = it.getParcelableArrayListExtra<LocalMedia>("list") ?: arrayListOf()
-            val position = it.getIntExtra("position", 0)
+            val previewData = IPreviewListData.Stub.asInterface(it.extras?.getBinder("previewData"))
+            list = previewData?.previewList.orEmpty() as ArrayList<LocalMedia>
+            val position = previewData.position
             currPagePosition = position
             val media = list.getOrNull(position)
             titleName?.text = media?.parentFolderName

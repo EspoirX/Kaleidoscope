@@ -49,8 +49,8 @@ class GestureCropImageView : CropImageView {
         return true
     }
 
-    override fun init() {
-        super.init()
+    override fun initView() {
+        super.initView()
         setupGestureListeners()
     }
 
